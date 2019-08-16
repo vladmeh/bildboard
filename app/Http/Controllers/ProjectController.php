@@ -8,11 +8,19 @@ use Illuminate\Validation\ValidationException;
 
 class ProjectController extends Controller
 {
+    /**
+     * @return Response
+     */
     public function index()
     {
         $projects = Project::all();
 
         return view('projects.index', compact('projects'));
+    }
+
+    public function show(Project $project)
+    {
+        return view('projects.show', compact('project'));
     }
 
     /**
