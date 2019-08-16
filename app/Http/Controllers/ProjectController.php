@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Project;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 
 class ProjectController extends Controller
 {
@@ -14,9 +15,18 @@ class ProjectController extends Controller
         return view('projects.index', compact('projects'));
     }
 
+    /**
+     * @return Response
+     * @throws ValidationException
+     */
     public function store()
     {
-        Project::create(request(['title', 'description']));
+        $attributes = $this->validate(request(), [
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        Project::create($attributes);
 
         return redirect('/projects');
     }
