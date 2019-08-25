@@ -11,7 +11,6 @@
 |
 */
 
-use App\Project;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,4 +19,8 @@ Route::get('/', function () {
 
 Route::get('/projects', 'ProjectController@index');
 Route::get('/projects/{project}', 'ProjectController@show');
-Route::post('/projects', 'ProjectController@store');
+Route::post('/projects', 'ProjectController@store')->middleware('auth');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
