@@ -40,7 +40,10 @@ class ManageProjectsTest extends TestCase
             'description' => $this->faker->paragraph
         ];
 
-        $this->post('/projects', $attributes)->assertRedirect('/projects');
+        $this->post('/projects', $attributes)
+            ->assertRedirect(
+                Project::where($attributes)->first()->path()
+            );
 
         $this->assertDatabaseHas('projects', $attributes);
 
