@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Project;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -32,7 +31,7 @@ class ManageProjectsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->actingAs(factory(User::class)->create());
+        $this->singIn();
 
         $this->get('projects/create')->assertOk();
 
@@ -53,7 +52,7 @@ class ManageProjectsTest extends TestCase
      */
     public function a_user_can_view_a_project()
     {
-        $this->be(factory(User::class)->create());
+        $this->singIn();
 
         $this->withoutExceptionHandling();
 
@@ -70,7 +69,7 @@ class ManageProjectsTest extends TestCase
      */
     public function an_authenticated_user_cannot_view_the_projects_of_others()
     {
-        $this->be(factory(User::class)->create());
+        $this->singIn();
 
         $project = factory(Project::class)->create();
 
@@ -82,7 +81,7 @@ class ManageProjectsTest extends TestCase
      */
     public function a_project_requires_a_title()
     {
-        $this->actingAs(factory(User::class)->create());
+        $this->singIn();
 
         $attributes = factory(Project::class)->raw(['title' => '']);
         $this->post('/projects', $attributes)->assertSessionHasErrors('title');
@@ -93,7 +92,7 @@ class ManageProjectsTest extends TestCase
      */
     public function a_project_requires_a_description()
     {
-        $this->actingAs(factory(User::class)->create());
+        $this->singIn();
 
         $attributes = factory(Project::class)->raw(['description' => '']);
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');

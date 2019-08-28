@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int id
@@ -13,13 +15,36 @@ class Project extends Model
 {
     protected $guarded = [];
 
-    public function path()
+    /**
+     * @return string
+     */
+    public function path(): string
     {
         return "/projects/{$this->id}";
     }
 
-    public function owner()
+    /**
+     * @return BelongsTo
+     */
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @param string $body
+     * @return Task
+     */
+    public function addTask(string $body): Task
+    {
+        return $this->tasks()->create(compact('body'));
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 }
