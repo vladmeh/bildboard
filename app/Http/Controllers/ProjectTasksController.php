@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\Task;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 
@@ -13,12 +14,11 @@ class ProjectTasksController extends Controller
      * @param Project $project
      * @return Response
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function store(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         $this->validate(request(), ['body' => 'required']);
 
@@ -35,7 +35,7 @@ class ProjectTasksController extends Controller
      */
     public function update(Project $project, Task $task)
     {
-        if (auth()->user()->isNot($project->owner)) {
+        if (auth()->user()->isNot($task->project->owner)) {
             abort(403);
         }
 

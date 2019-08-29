@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 
@@ -18,15 +19,21 @@ class ProjectController extends Controller
         return view('projects.index', compact('projects'));
     }
 
+    /**
+     * @param Project $project
+     * @return Response
+     * @throws AuthorizationException
+     */
     public function show(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         return view('projects.show', compact('project'));
     }
 
+    /**
+     * @return Response
+     */
     public function create()
     {
         return view('projects.create');
@@ -41,9 +48,24 @@ class ProjectController extends Controller
         $attributes = $this->validate(request(), [
             'title' => 'required',
             'description' => 'required',
+            'notes' => 'min:3',
         ]);
 
         $project = auth()->user()->projects()->create($attributes);
+
+        return redirect($project->path());
+    }
+
+    /**
+     * @param Project $project
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function update(Project $project)
+    {
+        $this->authorize('update', $project);
+
+        $project->update(request(['notes']));
 
         return redirect($project->path());
     }
