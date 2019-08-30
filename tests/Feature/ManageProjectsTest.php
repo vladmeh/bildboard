@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Project;
+use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -29,8 +30,6 @@ class ManageProjectsTest extends TestCase
      */
     public function a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
-
         $this->singIn();
 
         $this->get('projects/create')->assertOk();
@@ -45,8 +44,6 @@ class ManageProjectsTest extends TestCase
         $project = Project::where($attributes)->first();
         $response->assertRedirect($project->path());
 
-        $this->assertDatabaseHas('projects', $attributes);
-
         $this->get($project->path())
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
@@ -58,17 +55,13 @@ class ManageProjectsTest extends TestCase
      */
     public function a_user_can_update_a_project()
     {
-        $this->singIn();
+        $project = ProjectFactory::create();
 
-        $this->withoutExceptionHandling();
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $attribute = ['notes' => 'Changed'])
+            ->assertRedirect($project->path());
 
-        $project = factory(Project::class)->create(['owner_id' => auth()->id()]);
-
-        $this->patch($project->path(), [
-            'notes' => 'Changed',
-        ])->assertRedirect($project->path());
-
-        $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
+        $this->assertDatabaseHas('projects', $attribute);
     }
 
     /**
@@ -76,13 +69,10 @@ class ManageProjectsTest extends TestCase
      */
     public function a_user_can_view_a_project()
     {
-        $this->singIn();
+        $project = ProjectFactory::create();
 
-        $this->withoutExceptionHandling();
-
-        $project = factory(Project::class)->create(['owner_id' => auth()->id()]);
-
-        $this->get($project->path())
+        $this->actingAs($project->owner)
+            ->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
     }
@@ -109,7 +99,7 @@ class ManageProjectsTest extends TestCase
 
         $project = factory(Project::class)->create();
 
-        $this->patch($project->path(), [])->assertStatus(403);
+        $this->patch($project->path())->assertStatus(403);
     }
 
     /**

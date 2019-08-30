@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int id
  * @property int owner_id
  * @property User owner
+ * @property Collection tasks
+ * @property string title
+ * @property string description
  */
 class Project extends Model
 {
@@ -33,7 +37,7 @@ class Project extends Model
 
     /**
      * @param string $body
-     * @return Task
+     * @return Task|Model
      */
     public function addTask(string $body): Task
     {
