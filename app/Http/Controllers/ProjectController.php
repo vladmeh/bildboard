@@ -6,11 +6,12 @@ use App\Project;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
     /**
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -21,7 +22,7 @@ class ProjectController extends Controller
 
     /**
      * @param Project $project
-     * @return Response
+     * @return View
      * @throws AuthorizationException
      */
     public function show(Project $project)
@@ -32,7 +33,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @return Response
+     * @return View
      */
     public function create()
     {
@@ -45,27 +46,44 @@ class ProjectController extends Controller
      */
     public function store()
     {
-        $attributes = $this->validate(request(), [
+        $project = auth()->user()->projects()->create($this->validateRequest());
+
+        return redirect($project->path());
+    }
+
+    /**
+     * @return array
+     * @throws ValidationException
+     */
+    private function validateRequest(): array
+    {
+        return $this->validate(request(), [
             'title' => 'required',
             'description' => 'required',
             'notes' => 'min:3',
         ]);
+    }
 
-        $project = auth()->user()->projects()->create($attributes);
-
-        return redirect($project->path());
+    /**
+     * @param Project $project
+     * @return View
+     */
+    public function edit(Project $project)
+    {
+        return view('projects.edit', compact('project'));
     }
 
     /**
      * @param Project $project
      * @return Response
      * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function update(Project $project)
     {
         $this->authorize('update', $project);
 
-        $project->update(request(['notes']));
+        $project->update($this->validateRequest());
 
         return redirect($project->path());
     }
