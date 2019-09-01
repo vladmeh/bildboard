@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProjectRequest;
 use App\Project;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Response;
@@ -51,18 +52,18 @@ class ProjectController extends Controller
         return redirect($project->path());
     }
 
-    /**
-     * @return array
-     * @throws ValidationException
-     */
-    private function validateRequest(): array
-    {
-        return $this->validate(request(), [
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3',
-        ]);
-    }
+//    /**
+//     * @return array
+//     * @throws ValidationException
+//     */
+//    private function validateRequest(): array
+//    {
+//        return $this->validate(request(), [
+//            'title' => 'sometimes|required',
+//            'description' => 'sometimes|required',
+//            'notes' => 'nullable',
+//        ]);
+//    }
 
     /**
      * @param Project $project
@@ -74,17 +75,11 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param Project $project
+     * @param UpdateProjectRequest $form
      * @return Response
-     * @throws AuthorizationException
-     * @throws ValidationException
      */
-    public function update(Project $project)
+    public function update(UpdateProjectRequest $form)
     {
-        $this->authorize('update', $project);
-
-        $project->update($this->validateRequest());
-
-        return redirect($project->path());
+        return redirect($form->save()->path());
     }
 }

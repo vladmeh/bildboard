@@ -23,9 +23,13 @@
                                 @method('PATCH')
                                 @csrf
                                 <div class="flex">
-                                    <input type="text" value="{{ $task->body }}" name="body"
+                                    <input type="text"
+                                           value="{{ $task->body }}"
+                                           name="body"
                                            class="w-full {{$task->completed ? 'text-gray-500 line-through' : ''}}">
-                                    <input type="checkbox" name="completed"
+
+                                    <input type="checkbox"
+                                           name="completed"
                                            onchange="this.form.submit()" {{ $task->completed ? 'checked' : '' }}>
                                 </div>
                             </form>
@@ -34,7 +38,10 @@
                     <div class="card mb-3">
                         <form action="{{ $project->path() . '/tasks' }}" method="post">
                             @csrf
-                            <input type="text" placeholder="Add a new task..." class="w-full" name="body">
+                            <input type="text"
+                                   placeholder="Add a new task..."
+                                   class="w-full"
+                                   name="body">
                         </form>
                     </div>
                 </div>
@@ -52,6 +59,14 @@
 
                         <button type="submit" class="btn-blue">Save</button>
                     </form>
+
+                    @if($errors->any())
+                        <div class="field mt-6">
+                            @foreach($errors->all() as $error)
+                                <li class="text-sm text-red-500">{{ $error }}</li>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="lg:w-1/4 px-3">
