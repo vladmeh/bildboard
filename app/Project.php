@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Collection tasks
  * @property string title
  * @property string description
+ * @property Activity activity
  */
 class Project extends Model
 {
@@ -50,5 +51,13 @@ class Project extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function activity(): HasMany
+    {
+        return $this->hasMany(Activity::class);
     }
 }
