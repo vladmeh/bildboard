@@ -31,20 +31,22 @@ class ProjectTasksController extends Controller
      * @param Project $project
      * @param Task $task
      * @return Response
+     * @throws AuthorizationException
      * @throws ValidationException
      */
     public function update(Project $project, Task $task)
     {
-        if (auth()->user()->isNot($task->project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $task->project);
 
         $this->validate(request(), ['body' => 'required']);
 
         $task->update([
             'body' => request('body'),
-            'completed' => request()->has('completed'),
         ]);
+
+        if (request()->has('completed')){
+            $task->complete();
+        }
 
         return redirect($project->path());
     }
