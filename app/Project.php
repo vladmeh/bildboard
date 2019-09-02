@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Collection tasks
  * @property string title
  * @property string description
- * @property Activity activity
+ * @property Collection activity
  */
 class Project extends Model
 {
