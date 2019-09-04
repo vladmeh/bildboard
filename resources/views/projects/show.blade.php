@@ -52,6 +52,7 @@
 
                         <button type="submit" class="btn-blue">Save</button>
                     </form>
+                    @include('errors')
                 </div>
             </div>
             <div class="lg:w-1/4 px-3">
