@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Task;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -39,7 +40,12 @@ class TriggerActivityTest extends TestCase
         $project = ProjectFactory::create();
         $project->addTask('Some task');
         $this->assertCount(2, $project->activity);
-        $this->assertEquals('created_task', $project->activity->last()->description);
+
+        tap($project->activity->last(), function ($activity) {
+            $this->assertEquals('created_task', $activity->description);
+            $this->assertInstanceOf(Task::class, $activity->subject);
+            $this->assertEquals('Some task', $activity->subject->body);
+        });
     }
 
     /**
@@ -47,7 +53,7 @@ class TriggerActivityTest extends TestCase
      */
     public function completing_a_task()
     {
-        $project = ProjectFactory::withTasks(1) ->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
@@ -56,7 +62,11 @@ class TriggerActivityTest extends TestCase
             ]);
 
         $this->assertCount(3, $project->activity);
-        $this->assertEquals('completed_task', $project->activity->last()->description);
+
+        tap($project->activity->last(), function ($activity) {
+            $this->assertEquals('completed_task', $activity->description);
+            $this->assertInstanceOf(Task::class, $activity->subject);
+        });
     }
 
     /**
@@ -64,7 +74,7 @@ class TriggerActivityTest extends TestCase
      */
     public function incomplete_a_task()
     {
-        $project = ProjectFactory::withTasks(1) ->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
@@ -75,9 +85,9 @@ class TriggerActivityTest extends TestCase
         $this->assertCount(3, $project->activity);
 
         $this->patch($project->tasks[0]->path(), [
-                'body' => 'foobar',
-                'completed' => false,
-            ]);
+            'body' => 'foobar',
+            'completed' => false,
+        ]);
 
         $project->refresh();
 
@@ -91,7 +101,7 @@ class TriggerActivityTest extends TestCase
      */
     public function deleting_a_task()
     {
-        $project = ProjectFactory::withTasks(1) ->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
         $project->tasks[0]->delete();
 
