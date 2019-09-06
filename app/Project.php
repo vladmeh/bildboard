@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Project extends Model
 {
+    public $old = [];
     protected $guarded = [];
 
     /**
@@ -54,6 +55,17 @@ class Project extends Model
     }
 
     /**
+     * @param string $description
+     */
+    public function recordActivity(string $description)
+    {
+        $this->activity()->create([
+            'description' => $description,
+            'changes' => $this->activityChanges($description)
+        ]);
+    }
+
+    /**
      * @return HasMany
      */
     public function activity(): HasMany
@@ -63,10 +75,18 @@ class Project extends Model
 
     /**
      * @param string $description
+     * @return array|null
      */
-    public function recordActivity(string $description)
+    private function activityChanges(string $description): ?array
     {
-        $this->activity()->create(compact('description'));
+        if ($description === 'updated') {
+            return [
+                'before' => array_except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
+                'after' => array_except($this->getChanges(), 'updated_at')
+            ];
+        }
+
+        return null;
     }
 
 }
