@@ -10,15 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int id
  * @property int owner_id
- * @property User owner
- * @property Collection tasks
  * @property string title
  * @property string description
+ * @property User owner
  * @property Collection activity
+ * @property Collection tasks
  */
 class Project extends Model
 {
-    public $old = [];
+    use RecordActivity;
+
     protected $guarded = [];
 
     /**
@@ -55,38 +56,10 @@ class Project extends Model
     }
 
     /**
-     * @param string $description
-     */
-    public function recordActivity(string $description)
-    {
-        $this->activity()->create([
-            'description' => $description,
-            'changes' => $this->activityChanges($description)
-        ]);
-    }
-
-    /**
      * @return HasMany
      */
     public function activity(): HasMany
     {
         return $this->hasMany(Activity::class)->latest();
     }
-
-    /**
-     * @param string $description
-     * @return array|null
-     */
-    private function activityChanges(string $description): ?array
-    {
-        if ($description === 'updated') {
-            return [
-                'before' => array_except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
-                'after' => array_except($this->getChanges(), 'updated_at')
-            ];
-        }
-
-        return null;
-    }
-
 }

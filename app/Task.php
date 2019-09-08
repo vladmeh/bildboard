@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property Project project
@@ -12,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Task extends Model
 {
+    use RecordActivity;
+
+    protected static $recordableEvents = ['created', 'deleted'];
     protected $guarded = [];
-
     protected $touches = ['project'];
-
     protected $casts = [
         'completed' => 'boolean',
     ];
@@ -24,25 +24,6 @@ class Task extends Model
     {
         $this->update(['completed' => true]);
         $this->recordActivity('completed_task');
-    }
-
-    /**
-     * @param string $description
-     */
-    public function recordActivity(string $description)
-    {
-        $this->activity()->create([
-            'description' => $description,
-            'project_id' => $this->project_id,
-        ]);
-    }
-
-    /**
-     * @return MorphMany
-     */
-    public function activity(): MorphMany
-    {
-        return $this->morphMany(Activity::class, 'subject')->latest();
     }
 
     public function incomplete()
