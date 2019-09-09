@@ -27,6 +27,12 @@ class CreateActivitiesTable extends Migration
                 ->references('id')
                 ->on('projects')
                 ->onDelete('cascade');
+
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
