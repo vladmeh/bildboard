@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -82,9 +84,21 @@ class ProjectController extends Controller
     public function update(Project $project)
     {
         $this->authorize('update', $project);
-
         $project->update($this->validateRequest());
 
         return redirect($project->path());
+    }
+
+    /**
+     * @param Project $project
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function destroy(Project $project)
+    {
+        $this->authorize('update', $project);
+        $project->delete();
+
+        return redirect('/projects');
     }
 }
