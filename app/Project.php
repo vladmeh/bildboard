@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property User owner
  * @property Collection activity
  * @property Collection tasks
+ * @property void members
  */
 class Project extends Model
 {
@@ -61,5 +63,22 @@ class Project extends Model
     public function activity(): HasMany
     {
         return $this->hasMany(Activity::class)->latest();
+    }
+
+
+    /**
+     * @param User $user
+     */
+    public function invite(User $user)
+    {
+        $this->members()->attach($user);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_members');
     }
 }
