@@ -2,9 +2,14 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property Collection projects
+ */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -36,8 +41,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function projects()
+    /**
+     * @return HasMany
+     */
+    public function projects(): HasMany
     {
         return $this->hasMany(Project::class, 'owner_id')->latest('updated_at');
+    }
+
+    /**
+     * @return Collection
+     */
+    public function accessibleProjects()
+    {
+        return Project::where('owner_id', $this->id)
+            ->orWhereHas('members', function ($query) {
+                $query->where('user_id', $this->id);
+            })
+            ->get();
     }
 }

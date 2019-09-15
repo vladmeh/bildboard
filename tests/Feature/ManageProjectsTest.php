@@ -6,7 +6,6 @@ use App\Project;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Tests\TestCase;
 
 class ManageProjectsTest extends TestCase
@@ -50,6 +49,20 @@ class ManageProjectsTest extends TestCase
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
             ->assertSee($attributes['notes']);
+    }
+
+    /**
+     * @test
+     */
+    public function a_user_can_see_all_projects_they_have_been_invited_to_on_their_dashboard()
+    {
+        // given we`re signed in
+        // and we`ve been invited to a project that was not by created by us
+        $project = tap(ProjectFactory::create())->invite($this->singIn());
+
+        // when I visit my dashboard
+        // I should see that project
+        $this->get('/projects')->assertSee($project->title);
     }
 
     /**
