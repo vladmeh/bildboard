@@ -15,12 +15,12 @@
                             class="rounded-full mr-2 w-8"
                     >
                 @endforeach
-                    <img
-                            src="{{ gravatar_url($project->owner->email) }}"
-                            alt="{{ $project->owner->name }}`s avatar"
-                            class="rounded-full mr-2 w-8"
-                    >
-                    <a href="{{url($project->path() . '/edit')}}" class="btn-blue ml-6">Edit Project</a>
+                <img
+                        src="{{ gravatar_url($project->owner->email) }}"
+                        alt="{{ $project->owner->name }}`s avatar"
+                        class="rounded-full mr-2 w-8"
+                >
+                <a href="{{url($project->path() . '/edit')}}" class="btn-blue ml-6">Edit Project</a>
             </div>
         </div>
     </header>
@@ -72,6 +72,10 @@
             <div class="lg:w-1/4 px-3">
                 @include('projects.card')
                 @include('projects.activity.card')
+
+                @can ('manage', $project)
+                    @include('projects.invite')
+                @endcan
             </div>
         </div>
     </main>
