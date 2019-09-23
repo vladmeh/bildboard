@@ -70,7 +70,9 @@
                 </div>
             </div>
             <div class="lg:w-1/4 px-3">
-                @include('projects.card')
+                <div class="mt-10">
+                    @include('projects.card')
+                </div>
                 @include('projects.activity.card')
 
                 @can ('manage', $project)
