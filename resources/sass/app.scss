@@ -1,7 +1,15 @@
-// Variables
-@import 'variables';
-
 @tailwind base;
+
+@import "themes/light";
+@import "themes/dark";
+
+@import "components/button";
+@import "components/card";
+
+body,
+button {
+  @apply text-default;
+}
 
 h1 {
   @apply text-2xl;
@@ -22,39 +30,8 @@ a {
 @tailwind components;
 
 .section {
-  @apply px-4;
-}
-
-.btn-blue {
-  @apply bg-button text-white font-normal text-sm no-underline py-2 px-5 rounded-lg shadow;
-}
-
-.btn-blue:hover {
-  @apply bg-blue-700;
-}
-
-.card {
-  @apply bg-card p-5 rounded-lg shadow;
-  color: var(--text-default-color);
+  @apply px-8;
 }
 
 @tailwind utilities;
-
-.theme-light {
-  --page-background-color: #f7fafc; //bg-gray-100
-  --card-background-color: #ffffff; //bg-white
-  --button-background-color: #4299e1; //bg-blue-500
-  --header-background-color: #ffffff; //bg-white
-
-  --text-default-color: #222;
-}
-
-.theme-dark {
-  --page-background-color: #17181e;
-  --card-background-color: #1f2027;
-  --button-background-color: #4299e1; //bg-blue-500
-  --header-background-color: #1f2027;
-
-  --text-default-color: #fff;
-}
 

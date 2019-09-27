@@ -1,0 +1,15 @@
+.btn-blue {
+  @apply bg-button text-white font-normal text-sm no-underline py-2 px-5 rounded-lg shadow;
+
+  &:hover {
+    @apply bg-blue-700;
+  }
+
+  .theme-light & {
+    box-shadow: 0 2px 7px 0 #b0eaff;
+  }
+
+  .theme-dark & {
+    box-shadow: 0 2px 7px 0 #00658b;
+  }
+}

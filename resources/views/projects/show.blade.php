@@ -3,7 +3,7 @@
 @section('content')
     <header class="flex items-center mb-3 py-4">
         <div class="flex justify-between items-end w-full">
-            <p class="text-default text-sm font-normal">
+            <p class="text-muted text-sm font-light">
                 <a href="{{ url('/projects') }}" class="text-default text-sm font-normal no-underline">My Projects</a>
                 / {{ $project->title }}
             </p>
