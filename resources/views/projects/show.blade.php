@@ -36,7 +36,7 @@
                             <form action="{{ $task->path() }}" method="post">
                                 @method('PATCH')
                                 @csrf
-                                <div class="flex">
+                                <div class="flex items-center">
                                     <input type="text" value="{{ $task->body }}" name="body"
                                            class="bg-card text-default w-full {{$task->completed ? 'text-default line-through' : ''}}">
                                     <input type="checkbox" name="completed"
