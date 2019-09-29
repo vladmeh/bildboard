@@ -41,12 +41,12 @@ class Project extends Model
     }
 
     /**
-     * @param string $body
-     * @return Task|Model
+     * @param array $tasks
+     * @return Collection
      */
-    public function addTask(string $body): Task
+    public function addTasks(array $tasks)
     {
-        return $this->tasks()->create(compact('body'));
+        return $this->tasks()->createMany($tasks);
     }
 
     /**
@@ -55,6 +55,15 @@ class Project extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * @param string $body
+     * @return Task|Model
+     */
+    public function addTask(string $body): Task
+    {
+        return $this->tasks()->create(compact('body'));
     }
 
     /**
