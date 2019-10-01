@@ -15,7 +15,7 @@ trait RecordActivity
     public $oldAttributes = [];
 
     /**
-     * Boot the trait
+     * Boot the trait.
      */
     public static function bootRecordActivity()
     {

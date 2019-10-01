@@ -74,7 +74,6 @@ class Project extends Model
         return $this->hasMany(Activity::class)->latest();
     }
 
-
     /**
      * @param User $user
      */

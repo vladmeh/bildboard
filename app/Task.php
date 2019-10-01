@@ -47,5 +47,4 @@ class Task extends Model
     {
         return "/projects/{$this->project->id}/tasks/{$this->id}";
     }
-
 }

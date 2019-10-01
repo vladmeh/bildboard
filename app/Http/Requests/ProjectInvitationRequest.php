@@ -38,6 +38,4 @@ class ProjectInvitationRequest extends FormRequest
             'email.exists' => 'The user you are inviting must have a Birdboard account.'
         ];
     }
-
-
 }
