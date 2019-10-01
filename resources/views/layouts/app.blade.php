@@ -50,9 +50,9 @@
                     <div class="flex items-center ml-auto list-reset">
                         <!-- Authentication Links -->
                         @guest
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="text-default no-underline text-sm hover:underline" href="{{ route('login') }}">{{ __('Login') }}</a>
                             @if (Route::has('register'))
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                <a class="text-default no-underline text-sm hover:underline ml-4" href="{{ route('register') }}">{{ __('Register') }}</a>
                             @endif
                         @else
                             <theme-switcher></theme-switcher>
