@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App;
-
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -21,8 +19,6 @@ trait RecordActivity
     {
         foreach (self::recordableEvents() as $event) {
             static::$event(function (Model $model) use ($event) {
-
-
                 $model->recordActivity($model->activityDescription($event));
             });
 
