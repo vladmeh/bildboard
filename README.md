@@ -1,4 +1,3 @@
-[![StyleCI](https://github.styleci.io/repos/202612631/shield?branch=master)](https://github.styleci.io/repos/202612631)
 <p align="center"><img src="https://assets.laracasts.com/images/logo.svg" width="300"></p>
 
 ## laracast-bildboard 
