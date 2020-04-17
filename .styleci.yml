@@ -5,6 +5,7 @@ enabled:
   - concat_with_spaces
 
 disabled:
+  - length_ordered_imports
   - unused_use
   - trailing_comma_in_multiline_array
   - concat_without_spaces
